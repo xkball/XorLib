@@ -1,0 +1,118 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'com.gradleup.shadow' version '9.0.0-beta10'
+}
+
+group = 'com.xkball.xorlib'
+version = '1.0-SNAPSHOT'
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('generateAnnotationProcessorServicesFile'){
+
+    var target = file("src/main/resources/META-INF/services/javax.annotation.processing.Processor")
+    target.parentFile.mkdirs()
+    target.createNewFile()
+    target.text = ""
+
+    var classesDir = fileTree("src/main/java/com/xkball/xorlib/annotation_processor")
+    var classFiles = classesDir.getFiles().findAll { it.name.endsWith('.java') }
+    classFiles.each {
+        var path = it.path
+        var offset = path.indexOf("xkball")
+        if(offset >= 0) target.text += path.substring(offset-4,path.length()-5).replace("\\",".").replace("/",".") + '\n'
+    }
+    inputs.dir file("src/main/java")
+    outputs.file target
+}
+
+tasks.named("processResources") {
+    //dependsOn generateAnnotationProcessorServicesFile
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+
+tasks.named("shadowJar", ShadowJar){
+    exclude 'net/minecraft/**'
+    relocate "org.ow2", "com.xkball.shadow.org.ow2"
+    relocate "org.jetbrains", "com.xkball.shadow.org.jetbrains"
+}
+
+jar {
+    exclude 'net/minecraft/**'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm:9.6'
+    implementation 'org.ow2.asm:asm-tree:9.6'
+    implementation 'org.ow2.asm:asm-util:9.6'
+    implementation 'org.jetbrains:annotations:24.1.0'
+    //implementation 'com.github.javaparser:javaparser-core:3.26.2'
+    //implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.26.2'
+    //不能使用build里刚构建出来的 可能导致没法自持
+    annotationProcessor(files('libs/'+name+'-'+version+'.jar'))
+
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+
+}
+
+tasks.withType(JavaCompile).configureEach {
+    getSource().files
+//    outputs.upToDateWhen { false }
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+//    options.fork = true
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED')
+//    options.forkOptions.jvmArgs.add('-ea')
+
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED')
+    options.compilerArgs.add('--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED')
+}
+
+publishing { PublishingExtension it ->
+    publications {
+        // noinspection GroovyAssignabilityCheck
+        release(MavenPublication) {
+            // noinspection GroovyAssignabilityCheck
+            from components.java
+            // noinspection GroovyAssignabilityCheck
+            groupId = "com.xkball"
+            // noinspection GroovyAssignabilityCheck
+            artifactId = 'XorLib'
+            // noinspection GroovyAssignabilityCheck
+            pom {
+                // noinspection GroovyAssignabilityCheck
+                name = 'XorLib'
+                // noinspection GroovyAssignabilityCheck
+                url = "https://github.com/xkball/TinTeaTech"
+                developers {
+                    developer {
+                        //noinspection GroovyAssignabilityCheck
+                        id = 'xkball'
+                        //noinspection GroovyAssignabilityCheck
+                        name = 'xkball'
+                    }
+                }
+            }
+        }
+    }
+}
