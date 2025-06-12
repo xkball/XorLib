@@ -12,7 +12,7 @@ Not yet uploaded to any maven.
 
 ```build.gradle
 dependencies {
-    compileOnly(annotationProcessor(file("XorLib-1.0-SNAPSHOT-all.jar")))
+    compileOnly(annotationProcessor(files("XorLib-1.0-SNAPSHOT-all.jar")))
 }
 ```
 
