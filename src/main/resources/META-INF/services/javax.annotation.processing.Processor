@@ -1,4 +1,3 @@
 com.xkball.xorlib.annotation_processor.AnnotationProcessorProcessor
 com.xkball.xorlib.annotation_processor.ModMetaProcessor
 com.xkball.xorlib.annotation_processor.SupportMCVersionProcessor
-com.xkball.xorlib.annotation_processor.xlap.NetworkPackProcessor

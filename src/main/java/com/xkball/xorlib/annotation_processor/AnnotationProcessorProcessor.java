@@ -1,7 +1,6 @@
 package com.xkball.xorlib.annotation_processor;
 
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.processing.JavacFiler;
 import com.xkball.xorlib.api.annotation.internal.AnnotationProcessor;
 import com.xkball.xorlib.util.JavaWorkaround;
 

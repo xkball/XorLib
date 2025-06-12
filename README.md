@@ -8,11 +8,11 @@ This is a complie-only library. So users don't need to add dependencies to their
 
 ## Getting start
 
-Not yet uploaded to any maven. 
+This library had released on Maven Central.
 
 ```build.gradle
 dependencies {
-    compileOnly(annotationProcessor(files("XorLib-1.0-SNAPSHOT-all.jar")))
+    compileOnly(annotationProcessor("com.xkball:XorLib:0.1.1:all"))
 }
 ```
 
