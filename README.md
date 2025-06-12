@@ -8,7 +8,7 @@ This is a complie-only library. So users don't need to add dependencies to their
 
 ## Getting start
 
-Not yet uploaded to any mevan. 
+Not yet uploaded to any maven. 
 
 ```build.gradle
 dependencies {
@@ -179,9 +179,9 @@ Using this feature means you cannot write any method named **tr** and **trWithKe
 
 Cannot disable this feature for now.
 
-Use static method `XL.tr(String... i18n)` anywhere, and xorlib will replace it to `Component.translatable("generated key")` then generate an `LanguageProvider` to datagen all those localizations.
+Use static method `XL.tr(String... i18n)` anywhere, and xorlib will replace it to `Component.translatable("generated key")` then generate an `LanguageProvider` to datagen all those localizations. The language order is declared in `@ModMeta{useLanguages=[...]}`.
 
- Similarly, use `XL.trWithKey(String key, String ... i18n)` have identical function but use your declared key.
+Similarly, use `XL.trWithKey(String key, String ... i18n)` have identical function but use your declared key.
 
 ### `XL.staticLazy`
 
