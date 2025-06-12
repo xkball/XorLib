@@ -3,7 +3,6 @@ package com.xkball.xorlib.common;
 import com.sun.tools.javac.tree.JCTree;
 import com.xkball.xorlib.api.internal.IJCParamAdapter;
 import com.xkball.xorlib.api.internal.expr.IExprGetter;
-import com.xkball.xorlib.util.StringUtils;
 
 import java.util.Locale;
 

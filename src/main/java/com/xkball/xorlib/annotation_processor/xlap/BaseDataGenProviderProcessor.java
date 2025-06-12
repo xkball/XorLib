@@ -43,7 +43,6 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         Set<? extends Element> classes_ = modEnv.getElementsAnnotatedWith(DataGenProvider.class);
         java.util.List<Element> classes = new ArrayList<>(classes_);
         assert classes.stream().allMatch(element -> element.getKind().isClass());
-        if(classes.isEmpty()) return;
         
         var classTrees = classes.stream().map(c -> jcTrees.getTree((Symbol.ClassSymbol)c)).toList();
         classTrees = new ArrayList<>(classTrees);

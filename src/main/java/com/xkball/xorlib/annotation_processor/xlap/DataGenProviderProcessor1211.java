@@ -5,12 +5,12 @@ import com.sun.tools.javac.util.List;
 import com.xkball.xorlib.XorLib;
 import com.xkball.xorlib.annotation_processor.ModMetaProcessor;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
+import com.xkball.xorlib.api.internal.IJCParamAdapter;
 import com.xkball.xorlib.common.Expressions;
 import com.xkball.xorlib.common.VarGetterParamAdapter;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
 import static com.xkball.xorlib.common.VarGetterParamAdapter.ofEvent;
-import static com.xkball.xorlib.util.jctree.JCTreeUtils.ident;
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.name;
 
 @SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1"})
@@ -18,10 +18,12 @@ public class DataGenProviderProcessor1211 extends BaseDataGenProviderProcessor {
     
     public static final String EVENT_NAME = "net.neoforged.neoforge.data.event.GatherDataEvent";
     
+    private static final IJCParamAdapter GENERATOR_GETTER = ofEvent("net.minecraft.data.DataGenerator","getGenerator");
+    
     @Override
     public void beforeProcess() {
         paramAdapters.add(ofEvent("net.neoforged.fml.ModContainer","getModContainer"));
-        paramAdapters.add(ofEvent("net.minecraft.data.DataGenerator","getGenerator"));
+        paramAdapters.add(GENERATOR_GETTER);
         paramAdapters.add(ofEvent("net.neoforged.neoforge.common.data.ExistingFileHelper","getExistingFileHelper"));
         paramAdapters.add(new VarGetterParamAdapter("java.util.Collection","java.nio.file.Path","event_","getInputs"));
         paramAdapters.add(new VarGetterParamAdapter("java.util.concurrent.CompletableFuture","net.minecraft.core.HolderLookup.Provider","event_","getLookupProvider"));
@@ -37,6 +39,6 @@ public class DataGenProviderProcessor1211 extends BaseDataGenProviderProcessor {
     @Override
     public JCTree.JCExpression makeAddProvider(JCTree.JCExpression providerInstance) {
         var maker = JCTreeUtils.treeMaker;
-        return maker.Apply(List.nil(),maker.Select(ident("event_"),name("addProvider")),List.of(Expressions.getter("event_","includeClient").applyGet(),providerInstance));
+        return maker.Apply(List.nil(), maker.Select(GENERATOR_GETTER.makeParam(),name("addProvider")), List.of(Expressions.getter("event_","includeClient").applyGet(),providerInstance));
     }
 }

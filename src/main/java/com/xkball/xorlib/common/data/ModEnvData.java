@@ -85,8 +85,10 @@ public record ModEnvData(String modid, String modLoader, String mcVersion, List<
     
     public void runProcessor(IExtendedProcessingEnv env){
         ModMetaProcessor.staticModEnv = this;
-        processors.forEach(IXLAnnotationProcessor::beforeProcess);
-        processors.forEach(p -> p.process(this,env));
-        processors.forEach(IXLAnnotationProcessor::afterProcess);
+        for(var processor : processors){
+            processor.beforeProcess();
+            processor.process(this,env);
+            processor.afterProcess();
+        }
     }
 }
