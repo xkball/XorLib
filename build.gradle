@@ -73,6 +73,10 @@ dependencies {
 
 }
 
+java {
+    withSourcesJar()
+}
+
 tasks.withType(JavaCompile).configureEach {
     getSource().files
 //    outputs.upToDateWhen { false }

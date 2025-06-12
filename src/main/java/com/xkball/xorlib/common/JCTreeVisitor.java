@@ -50,6 +50,7 @@ public class JCTreeVisitor {
     }
     
     public void visitClassDecl(JCTree.JCClassDecl classDecl) {
+        if(classDecl.defs == null) return;
         for(var def : classDecl.defs) {
             visitJCTree(def);
         }
@@ -65,6 +66,7 @@ public class JCTreeVisitor {
     }
     
     public void visitJCBlock(JCTree.JCBlock jcBlock) {
+        if(jcBlock.stats == null) return;
         for(var statement : jcBlock.stats) {
             visitJCTree(statement);
         }
@@ -86,6 +88,7 @@ public class JCTreeVisitor {
     public void visitJCTry(JCTree.JCTry jctry) {
         visitJCTree(jctry.body);
         visitJCTree(jctry.finalizer);
+        if(jctry.catchers == null) return;
         for(var jcCatch : jctry.catchers) {
             visitJCTree(jcCatch);
         }
@@ -103,18 +106,23 @@ public class JCTreeVisitor {
     }
     
     public void visitJCForLoop(JCTree.JCForLoop jcforloop) {
-        for(var stat : jcforloop.init){
-            visitJCTree(stat);
+        if(jcforloop.init != null) {
+            for(var stat : jcforloop.init){
+                visitJCTree(stat);
+            }
         }
         visitJCTree(jcforloop.cond);
-        for(var stat : jcforloop.step){
-            visitJCTree(stat);
+        if(jcforloop.step != null) {
+            for(var stat : jcforloop.step){
+                visitJCTree(stat);
+            }
         }
         visitJCTree(jcforloop.body);
     }
     
     public void visitJCSwitch(JCTree.JCSwitch jcswitch) {
         visitJCTree(jcswitch.selector);
+        if(jcswitch.cases == null) return;
         for(var jcCase : jcswitch.cases) {
             visitJCTree(jcCase);
         }
@@ -136,6 +144,7 @@ public class JCTreeVisitor {
     public void visitJCCase(JCTree.JCCase jcCase) {
         visitJCTree(jcCase.guard);
         visitJCTree(jcCase.body);
+        if(jcCase.stats == null) return;
         for(var stat : jcCase.stats) {
             visitJCTree(stat);
         }
@@ -162,6 +171,7 @@ public class JCTreeVisitor {
     
     public void visitJCMethodInvocation(JCTree.JCMethodInvocation jcMethodInvocation) {
         visitJCTree(jcMethodInvocation.meth);
+        if(jcMethodInvocation.args == null) return;
         for(var arg : jcMethodInvocation.args) {
             visitJCTree(arg);
         }
@@ -174,6 +184,7 @@ public class JCTreeVisitor {
     }
     
     public void visitJCNewClass(JCTree.JCNewClass jcNewClass) {
+        if(jcNewClass.args == null) return;
         for(var arg : jcNewClass.args) {
             visitJCTree(arg);
         }
@@ -215,6 +226,7 @@ public class JCTreeVisitor {
     }
     
     public void visitJCNewArray(JCTree.JCNewArray jcNewArray) {
+        if (jcNewArray.elems == null) return;
         for(var elem : jcNewArray.elems) {
             visitJCTree(elem);
         }
