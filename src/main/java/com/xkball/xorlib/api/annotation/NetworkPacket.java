@@ -9,18 +9,18 @@ import java.lang.annotation.Target;
  *  Need to be used with one and only one Codec and Handler annotation.
  */
 @Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @SuppressWarnings("unused")
 public @interface NetworkPacket {
     
     Type type();
     
     @Target({ElementType.FIELD})
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(RetentionPolicy.CLASS)
     @interface Codec{ }
     
     @Target({ElementType.METHOD})
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(RetentionPolicy.CLASS)
     @interface Handler{ }
     
     enum Type{

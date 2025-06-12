@@ -17,7 +17,7 @@ public @interface ModMeta {
     /**
      * The name of mod loader. Keep empty for auto estimate. Should like "NeoForge" (And only NeoForge now) .
      */
-    String loaderName() default "";
+    String modLoaderName() default "";
     
     /**
      * Minecraft Version. Keep empty for auto estimate. Should like "1.21.1".

@@ -1,9 +1,9 @@
 package com.xkball.xorlib.annotation_processor;
 
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.processing.JavacFiler;
 import com.xkball.xorlib.api.annotation.internal.AnnotationProcessor;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
+import com.xkball.xorlib.util.JavaWorkaround;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -22,8 +22,12 @@ import java.util.Set;
 @SupportedAnnotationTypes({SupportMCVersionProcessor.SUPPORT_MC_VERSION})
 public class SupportMCVersionProcessor extends AbstractProcessor {
     
+    static {
+        JavaWorkaround.init();
+    }
+    
     public static final String SUPPORT_MC_VERSION = "com.xkball.xorlib.api.annotation.internal.SupportMCVersion";
-    private static final String PATH = "META-INF/com.xkball.xorlib.BatchAnnotationProcessor";
+    public static final String PATH = "META-INF/com.xkball.xorlib.BatchAnnotationProcessor";
     private Filer filer;
     
     @Override

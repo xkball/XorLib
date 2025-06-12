@@ -2,8 +2,16 @@ package com.xkball.xorlib.util;
 
 import com.sun.tools.javac.util.Pair;
 
-public class StringUtils {
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
+public class StringUtils {
+    
+    public static String toSmallCamelCase(String str) {
+        return str.substring(0, 1).toLowerCase() + str.substring(1);
+    }
+    
     public static String toSnakeCase(String str) {
         var builder = new StringBuilder();
         for(var c : str.toCharArray()) {
@@ -35,6 +43,48 @@ public class StringUtils {
             str = str.substring(0,startIndex) + str.substring(endIndex);
         }
         return str;
+    }
+    
+    private static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(
+            "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const",
+            "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float",
+            "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native",
+            "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp",
+            "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void",
+            "volatile", "while", "true", "false", "null"
+    ));
+    
+    public static String toValidIdent(String input) {
+        if (input == null || input.isEmpty()) {
+            return "_";
+        }
+        
+        StringBuilder sb = new StringBuilder();
+        
+        char firstChar = input.charAt(0);
+        if (Character.isJavaIdentifierStart(firstChar)) {
+            sb.append(firstChar);
+        } else {
+            sb.append('_');
+        }
+        
+        for (int i = 1; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (Character.isJavaIdentifierPart(c)) {
+                sb.append(c);
+            } else {
+                sb.append('_');
+            }
+        }
+        
+        String result = sb.toString();
+        
+        // 检查是否为关键字
+        if (JAVA_KEYWORDS.contains(result)) {
+            result += "_";
+        }
+        
+        return result;
     }
     
 //    public static String fixTypeNameWithArgRecursive(String className,String typeName) {

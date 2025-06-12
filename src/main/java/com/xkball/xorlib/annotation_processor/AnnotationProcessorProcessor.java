@@ -3,6 +3,7 @@ package com.xkball.xorlib.annotation_processor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.processing.JavacFiler;
 import com.xkball.xorlib.api.annotation.internal.AnnotationProcessor;
+import com.xkball.xorlib.util.JavaWorkaround;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -20,8 +21,13 @@ import java.util.Set;
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
 @SupportedAnnotationTypes({AnnotationProcessorProcessor.ANNOTATION_PROCESSOR})
 public class AnnotationProcessorProcessor extends AbstractProcessor {
+    
+    static {
+        JavaWorkaround.init();
+    }
+    
     public static final String ANNOTATION_PROCESSOR = "com.xkball.xorlib.api.annotation.internal.AnnotationProcessor";
-    private static final String PATH = "META-INF/javax.annotation.processing.Processor";
+    private static final String PATH = "META-INF/services/javax.annotation.processing.Processor";
     private Filer filer;
     
     @Override
