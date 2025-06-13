@@ -45,4 +45,13 @@ public @interface ModMeta {
      */
     String[] useLanguages() default {"en_us"};
     
+    Feature[] disabledFeatures() default {};
+    
+    enum Feature{
+        NETWORK_PACKET,
+        SUBSCRIBE_EVENT_ENHANCED,
+        DATA_GEN_PROVIDER,
+        EMBEDDED_L10N_COMPONENT
+    }
+    
 }

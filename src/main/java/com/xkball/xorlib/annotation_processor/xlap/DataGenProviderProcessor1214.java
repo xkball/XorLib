@@ -4,6 +4,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
 import com.xkball.xorlib.XorLib;
 import com.xkball.xorlib.annotation_processor.ModMetaProcessor;
+import com.xkball.xorlib.api.annotation.ModMeta;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.common.Expressions;
 import com.xkball.xorlib.common.VarGetterParamAdapter;
@@ -13,7 +14,7 @@ import static com.xkball.xorlib.common.VarGetterParamAdapter.ofEvent;
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.ident;
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.name;
 
-@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.4"})
+@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.4"}, feature = ModMeta.Feature.DATA_GEN_PROVIDER)
 public class DataGenProviderProcessor1214 extends BaseDataGenProviderProcessor{
     
     public static final String EVENT_NAME = "net.neoforged.neoforge.data.event.GatherDataEvent.Client";

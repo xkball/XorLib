@@ -25,7 +25,7 @@ dependencies {
 Some metadata of a mod and some configuration of XorLib annotation processor.
 The annotation should apply to EVERY class with `net.neoforged.fml.common.Mod`. Any missing match of these two annotations will cause compilation exception.
 
-Xorlib get your modid from though this annotation.
+Xorlib get your modid from through this annotation.
 
 Example:
 
@@ -173,11 +173,11 @@ This annotation has one more field than `@SubscribeEvent` which is `String[] req
 
 
 
-### Embedded locolization for translatable `net.minecraft.network.chat.Component`
+### Embedded localization for translatable `net.minecraft.network.chat.Component`
 
 Using this feature means you cannot write any method named **tr** and **trWithKey**.
 
-Cannot disable this feature for now.
+Disable this feature through `@ModMeta(disabledFratures = {Featrue.EMBEDDED_L10N_COMPONENT})`
 
 Use static method `XL.tr(String... i18n)` anywhere, and xorlib will replace it to `Component.translatable("generated key")` then generate an `LanguageProvider` to datagen all those localizations. The language order is declared in `@ModMeta{useLanguages=[...]}`.
 

@@ -91,7 +91,7 @@ public class ModMetaProcessor extends AbstractProcessor implements IExtendedProc
                     throw new RuntimeException("@SupportMCVersion annotation not found");
                 }
                 var ap = (IXLAnnotationProcessor)clazz.getDeclaredConstructor().newInstance();
-                var versionData = new APVersionData(anno.loader(), List.of(anno.version()));
+                var versionData = new APVersionData(anno.loader(), List.of(anno.version()), anno.feature());
                 annoProcessors.add(new Pair<>(ap, versionData));
             } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                      IllegalAccessException | NoSuchMethodException e) {
@@ -100,9 +100,10 @@ public class ModMetaProcessor extends AbstractProcessor implements IExtendedProc
         }
     }
     
-    public List<IXLAnnotationProcessor> filterProcessors(String modLoader, String mcVersion) {
+    public List<IXLAnnotationProcessor> filterProcessors(String modLoader, String mcVersion, List<ModMeta.Feature> disabledFeatures) {
         return annoProcessors.stream()
                 .filter(p -> p.snd.loader().equals(modLoader) && p.snd.versions().contains(mcVersion))
+                .filter(p -> !disabledFeatures.contains(p.snd.feature()))
                 .map(p -> p.fst).toList();
     }
     

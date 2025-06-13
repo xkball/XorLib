@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public record ModEnvData(String modid, String modLoader, String mcVersion, List<String> packages, List<String> useLanguages, List<IXLAnnotationProcessor> processors) {
+public record ModEnvData(String modid, String modLoader, String mcVersion, List<String> packages, List<String> useLanguages, List<ModMeta.Feature> disabledFeature, List<IXLAnnotationProcessor> processors) {
     public static ModEnvData create(JCTree.JCClassDecl classTree, ModMetaProcessor env) {
         var annoAttrMod = Objects.requireNonNull(JCTreeUtils.Finder.findAnnotation(classTree,Types.MOD)).attribute;
         var annoAttrModMeta = Objects.requireNonNull(JCTreeUtils.Finder.findAnnotation(classTree, Types.MOD_META)).attribute;
@@ -44,7 +44,12 @@ public record ModEnvData(String modid, String modLoader, String mcVersion, List<
             useLanguages = List.of("en_us");
         }
         
-        return new ModEnvData(modid,modLoader, mcVersion, packages, useLanguages, env.filterProcessors(modLoader, mcVersion));
+        List<ModMeta.Feature> disabledFeature = AnnotationUtils.getAnnotationValueAsEnumList(annoAttrModMeta,"disabledFeatures", ModMeta.Feature.class);
+        if (disabledFeature == null){
+            disabledFeature = List.of();
+        }
+        
+        return new ModEnvData(modid,modLoader, mcVersion, packages, useLanguages, disabledFeature, env.filterProcessors(modLoader, mcVersion, disabledFeature));
     }
     
     private <T extends Element> Set<T> filterElements(Set<T> elements) {

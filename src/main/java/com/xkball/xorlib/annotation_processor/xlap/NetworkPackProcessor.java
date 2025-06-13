@@ -3,6 +3,7 @@ package com.xkball.xorlib.annotation_processor.xlap;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.util.List;
 import com.xkball.xorlib.XorLib;
+import com.xkball.xorlib.api.annotation.ModMeta;
 import com.xkball.xorlib.api.annotation.NetworkPacket;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
@@ -18,7 +19,7 @@ import java.util.Objects;
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.isPublicStatic;
 
 
-@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"})
+@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"}, feature = ModMeta.Feature.NETWORK_PACKET)
 public class NetworkPackProcessor implements IXLAnnotationProcessor {
     
     public static final String NETWORK_PACK = "com.xkball.xorlib.api.annotation.NetworkPacket";

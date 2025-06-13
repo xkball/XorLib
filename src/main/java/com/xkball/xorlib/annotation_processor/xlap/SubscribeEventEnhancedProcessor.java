@@ -6,6 +6,7 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.List;
 import com.xkball.xorlib.XorLib;
+import com.xkball.xorlib.api.annotation.ModMeta;
 import com.xkball.xorlib.api.annotation.SubscribeEventEnhanced;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
@@ -22,7 +23,7 @@ import java.util.function.Consumer;
 
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.*;
 
-@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"})
+@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"}, feature = ModMeta.Feature.SUBSCRIBE_EVENT_ENHANCED)
 public class SubscribeEventEnhancedProcessor implements IXLAnnotationProcessor {
     
     public static final String MAIN_CLASS_HOOK_NAME = "xorLibGenerate$onModInit";

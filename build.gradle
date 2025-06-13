@@ -165,6 +165,7 @@ jreleaser {
                     active = 'ALWAYS'
                     url = 'https://central.sonatype.com/api/v1/publisher'
                     stagingRepository('build/staging-deploy')
+                    maxRetries = 10
                 }
             }
 //            nexus2 {

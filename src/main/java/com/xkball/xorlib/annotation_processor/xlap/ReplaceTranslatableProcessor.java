@@ -5,6 +5,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.xkball.xorlib.XorLib;
 import com.xkball.xorlib.annotation_processor.ModMetaProcessor;
+import com.xkball.xorlib.api.annotation.ModMeta;
 import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
@@ -24,7 +25,7 @@ import java.util.Map;
 
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.*;
 
-@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"})
+@SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"}, feature = ModMeta.Feature.EMBEDDED_L10N_COMPONENT)
 public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAnnotationProcessor {
     
     public static final List<JCTree.JCClassDecl> generatedClasses = new ArrayList<>();
