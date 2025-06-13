@@ -51,7 +51,8 @@ public @interface ModMeta {
         NETWORK_PACKET,
         SUBSCRIBE_EVENT_ENHANCED,
         DATA_GEN_PROVIDER,
-        EMBEDDED_L10N_COMPONENT
+        EMBEDDED_L10N_COMPONENT,
+        EMBEDDED_STATIC_LAZY
     }
     
 }

@@ -3,6 +3,7 @@ package com.xkball.xorlib.annotation_processor;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.comp.Attr;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.util.Pair;
 import com.xkball.xorlib.api.annotation.ModMeta;
@@ -53,6 +54,7 @@ public class ModMetaProcessor extends AbstractProcessor implements IExtendedProc
     protected JavacTrees trees;
     protected Symtab symtab;
     protected Enter enter;
+    protected Attr attr;
     
     protected final List<Pair<IXLAnnotationProcessor, APVersionData>> annoProcessors = new ArrayList<>();
     protected final List<ModEnvData> modEnvData = new ArrayList<>();
@@ -64,8 +66,10 @@ public class ModMetaProcessor extends AbstractProcessor implements IExtendedProc
         this.elementUtils = processingEnv.getElementUtils();
         this.filer = processingEnv.getFiler();
         this.trees = JavacTrees.instance(processingEnv);
-        this.symtab = Symtab.instance(JCTreeUtils.getContext(processingEnv));
-        this.enter = Enter.instance(JCTreeUtils.getContext(processingEnv));
+        var context = JCTreeUtils.getContext(processingEnv);
+        this.symtab = Symtab.instance(context);
+        this.enter = Enter.instance(context);
+        this.attr = Attr.instance(context);
         JCTreeUtils.setup(processingEnv);
     }
     
@@ -178,6 +182,11 @@ public class ModMetaProcessor extends AbstractProcessor implements IExtendedProc
     @Override
     public Enter getEnter() {
         return enter;
+    }
+    
+    @Override
+    public Attr getAttr(){
+        return attr;
     }
     
 }

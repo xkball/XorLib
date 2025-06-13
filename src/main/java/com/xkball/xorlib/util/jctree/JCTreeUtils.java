@@ -121,10 +121,18 @@ public class JCTreeUtils {
         return tree.name.toString();
     }
     
+    public static JCTree.JCParens cast(String type, JCTree.JCExpression expr){
+        return treeMaker.Parens(treeMaker.TypeCast(makeIdent(type),expr));
+    }
+    
     public static class Adder{
         
         public static void addImplement2Class(JCTree.JCClassDecl target, String interfaceName) {
             target.implementing = target.implementing.append(makeIdent(interfaceName));
+        }
+        
+        public static void addField2Class(JCTree.JCClassDecl target, JCTree.JCExpression fieldType, String fieldName, JCTree.JCModifiers modifiers, JCTree.JCExpression initValue) {
+            target.defs = target.defs.append(treeMaker.VarDef(modifiers,name(fieldName),fieldType,initValue));
         }
         
         public static void addField2Class(JCTree.JCClassDecl target, String fieldType, String fieldName, JCTree.JCModifiers modifiers, JCTree.JCExpression initValue) {
@@ -233,6 +241,10 @@ public class JCTreeUtils {
         
         public static JCTree.JCModifiers publicStaticFinal(){
             return treeMaker.Modifiers(Modifier.PUBLIC | Modifier.STATIC | Modifier.FINAL);
+        }
+        
+        public static JCTree.JCModifiers privateStaticFinal(){
+            return treeMaker.Modifiers(Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL);
         }
         
         public static JCTree.JCModifiers param(){

@@ -2,7 +2,6 @@ package com.xkball.xorlib;
 
 import com.xkball.xorlib.util.ComponentImpl;
 
-//todo 选择性禁用
 @SuppressWarnings("unused")
 public class XL {
     
