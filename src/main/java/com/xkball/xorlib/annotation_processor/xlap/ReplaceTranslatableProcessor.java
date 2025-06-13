@@ -13,6 +13,7 @@ import com.xkball.xorlib.common.JCTreeVisitor;
 import com.xkball.xorlib.common.MethodBuilder;
 import com.xkball.xorlib.common.data.ModEnvData;
 import com.xkball.xorlib.util.StringUtils;
+import com.xkball.xorlib.util.jctree.ImportHelper;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
 import java.util.ArrayDeque;
@@ -31,6 +32,7 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
     public static final List<JCTree.JCClassDecl> generatedClasses = new ArrayList<>();
     private ModEnvData modEnv;
     private TreeMaker maker;
+    private ImportHelper importHelper;
     private final Deque<String> identStack = new ArrayDeque<>();
     private final Deque<Integer> countStack = new ArrayDeque<>();
     private final Map<String,List<String>> i18nMap = new HashMap<>();
@@ -102,15 +104,11 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
     }
     
     public boolean isXL_tr(JCTree.JCMethodInvocation jcMethodInvocation) {
-        var meth = jcMethodInvocation.meth;
-        var methName = meth.toString();
-        return methName.equals("com.xkball.xorlib.XL.tr") || methName.equals("XL.tr") || methName.equals("tr");
+        return importHelper.matchMethodInvoke(jcMethodInvocation,"com.xkball.xorlib.XL","tr");
     }
     
     public boolean isXL_trWithKey(JCTree.JCMethodInvocation jcMethodInvocation) {
-        var meth = jcMethodInvocation.meth;
-        var methName = meth.toString();
-        return methName.equals("com.xkball.xorlib.XL.trWithKey") || methName.equals("XL.trWithKey") || methName.equals("trWithKey");
+        return importHelper.matchMethodInvoke(jcMethodInvocation,"com.xkball.xorlib.XL","trWithKey");
     }
     
     public boolean isComponentImpl_Format(JCTree.JCMethodInvocation jcMethodInvocation) {
@@ -136,6 +134,7 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
         generateLangProviderClass();
         for(var classSymbol : modEnv.getAllClassSymbols()){
             var classTree = processingEnv.getJavacTrees().getTree(classSymbol);
+            this.importHelper = new ImportHelper(processingEnv,classSymbol);
             visitJCTree(classTree);
         }
         System.out.println(i18nMap);
