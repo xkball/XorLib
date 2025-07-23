@@ -27,7 +27,7 @@ public class JCTreeUtils {
     public static Elements elementUtils;
     public static TreeMaker treeMaker;
     public static Names names;
-    public static PosStack posStack;
+    public static PosStack posStack = new PosStack();
     
     public static final Map<JCTree.JCClassDecl,String> createdClassNames = new HashMap<>();
     
@@ -272,7 +272,7 @@ public class JCTreeUtils {
         
         public void popPos(){
             stack.pop();
-            treeMaker.pos = stack.getLast();
+            treeMaker.pos = stack.isEmpty() ? -1 : stack.getLast();
         }
     }
 }
