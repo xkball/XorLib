@@ -9,7 +9,7 @@ import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.common.JCTreeVisitor;
 import com.xkball.xorlib.common.data.ModEnvData;
-import com.xkball.xorlib.util.LogHelper;
+import com.xkball.xorlib.util.Logger;
 import com.xkball.xorlib.util.jctree.ImportHelper;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
@@ -37,8 +37,8 @@ public class StaticLazyProcessor extends JCTreeVisitor implements IXLAnnotationP
             createLazy(lazyName, jcMethodInvocation.args.getFirst(),type.toString());
             jcMethodInvocation.meth = treeMaker.Select(makeIdent(currentClassTree.sym.toString() + "." + lazyName),name("get"));
             jcMethodInvocation.args = List.nil();
-            LogHelper.INSTANCE.debug("Processing: \n" + raw);
-            LogHelper.INSTANCE.debug("result: \n" + jcMethodInvocation);
+            Logger.INSTANCE.debug("Processing: \n" + raw);
+            Logger.INSTANCE.debug("result: \n" + jcMethodInvocation);
         }
     }
     

@@ -12,7 +12,7 @@ import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.common.JCTreeVisitor;
 import com.xkball.xorlib.common.MethodBuilder;
 import com.xkball.xorlib.common.data.ModEnvData;
-import com.xkball.xorlib.util.LogHelper;
+import com.xkball.xorlib.util.Logger;
 import com.xkball.xorlib.util.StringUtils;
 import com.xkball.xorlib.util.jctree.ImportHelper;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
@@ -107,8 +107,8 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
             jcMethodInvocation.args = inner.args.appendList(jcMethodInvocation.args);
         }
         if(raw != null) {
-            LogHelper.INSTANCE.debug("Processing: \n" + raw);
-            LogHelper.INSTANCE.debug("result: \n" + jcMethodInvocation);
+            Logger.INSTANCE.debug("Processing: \n" + raw);
+            Logger.INSTANCE.debug("result: \n" + jcMethodInvocation);
         }
     }
     
@@ -148,7 +148,7 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
             visitJCTree(classTree);
             posStack.popPos();
         }
-        LogHelper.INSTANCE.log(i18nMap);
+        Logger.INSTANCE.log(i18nMap);
         for(int i = 0; i < modEnv.useLanguages().size(); i++){
             var classTree = generatedClasses.get(i);
             posStack.pushPos(classTree);

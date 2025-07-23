@@ -2,12 +2,12 @@ package com.xkball.xorlib.util;
 
 import com.xkball.xorlib.XorLib;
 
-public class LogHelper {
+public class Logger {
     
-    public static final LogHelper INSTANCE = new LogHelper();
+    public static final Logger INSTANCE = new Logger();
     private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
     
-    private LogHelper() {}
+    private Logger() {}
     
     public void log(Object msg) {
         var clazz = STACK_WALKER.getCallerClass();

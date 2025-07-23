@@ -16,7 +16,7 @@ dependencies {
 }
 ```
 
-
+Add environment variable `XORLIB.DEBUG=TRUE` to show more information when comilation.
 
 ## Contents
 
@@ -185,4 +185,21 @@ Similarly, use `XL.trWithKey(String key, String ... i18n)` have identical functi
 
 ### `XL.staticLazy`
 
-Not yet finished.
+Before compilation:
+
+```java
+public void aMethod(){
+    System.out.println(XL.staticLazy("1"));
+}
+```
+
+After compilation:
+
+```java
+private static final net.neoforged.neoforge.common.util.Lazy<String> XORLIB_GENERATED_LAZY_0 = Lazy.of("1");
+
+public void aMethod(){
+    System.out.println(XL.staticLazy(XORLIB_GENERATED_LAZY_0.get()));
+}
+```
+

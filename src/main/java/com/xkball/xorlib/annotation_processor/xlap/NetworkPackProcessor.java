@@ -9,7 +9,7 @@ import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
 import com.xkball.xorlib.common.data.ModEnvData;
-import com.xkball.xorlib.util.LogHelper;
+import com.xkball.xorlib.util.Logger;
 import com.xkball.xorlib.util.jctree.AnnotationUtils;
 import com.xkball.xorlib.util.Types;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
@@ -60,8 +60,8 @@ public class NetworkPackProcessor implements IXLAnnotationProcessor {
             NetworkJCTreeUtils.addNetworkRegListener(classTree,modid,type,codec.owner.flatName()+"."+codec.flatName(),handler.name.toString(),handler.owner.flatName().toString());
             JCTreeUtils.Adder.addAnnotation2Method(JCTreeUtils.Finder.findSingleMethod(classTree,"register"),Types.SUBSCRIBE_EVENT, List.nil());
             posStack.popPos();
-            LogHelper.INSTANCE.log("Processing " + fullClassName);
-            LogHelper.INSTANCE.debug("result: \n"+ classTree);
+            Logger.INSTANCE.log("Processing " + fullClassName);
+            Logger.INSTANCE.debug("result: \n"+ classTree);
         }
     }
     
