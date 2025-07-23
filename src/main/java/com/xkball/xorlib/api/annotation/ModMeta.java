@@ -45,9 +45,16 @@ public @interface ModMeta {
      */
     String[] useLanguages() default {"en_us"};
     
+    /**
+     * Disabled features.
+     * @return Features you want to disable.
+     */
     Feature[] disabledFeatures() default {};
     
     enum Feature{
+        /**
+         * {@link com.xkball.xorlib.api.annotation.NetworkPacket}
+         */
         NETWORK_PACKET,
         SUBSCRIBE_EVENT_ENHANCED,
         DATA_GEN_PROVIDER,

@@ -9,6 +9,7 @@ import com.xkball.xorlib.api.annotation.internal.SupportMCVersion;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
 import com.xkball.xorlib.common.data.ModEnvData;
+import com.xkball.xorlib.util.LogHelper;
 import com.xkball.xorlib.util.jctree.AnnotationUtils;
 import com.xkball.xorlib.util.Types;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
@@ -25,7 +26,6 @@ public class NetworkPackProcessor implements IXLAnnotationProcessor {
     public static final String NETWORK_PACK = "com.xkball.xorlib.api.annotation.NetworkPacket";
     public static final String CODEC = "com.xkball.xorlib.api.annotation.NetworkPacket.Codec";
     public static final String HANDLER = "com.xkball.xorlib.api.annotation.NetworkPacket.Handler";
-    public static final String LOG_HEAD = "[XorLib.NetworkPackProcessor] ";
     
     @Override
     public void process(ModEnvData modEnv, IExtendedProcessingEnv env) {
@@ -40,7 +40,7 @@ public class NetworkPackProcessor implements IXLAnnotationProcessor {
         for (var currentClass : usingClasses) {
             var classElement = (Symbol.ClassSymbol)currentClass;
             var fullClassName = classElement.fullname.toString();
-            System.out.println(LOG_HEAD + "Processing " + fullClassName);
+            
             
             var codec = (Symbol.VarSymbol)usingCodec.stream().filter(symbol -> ((Symbol.VarSymbol)symbol).owner.equals(currentClass)).findFirst().orElseThrow();
             var handler = (Symbol.MethodSymbol)usingHandlers.stream().filter(symbol -> ((Symbol.MethodSymbol)symbol).owner.equals(currentClass)).findFirst().orElseThrow();
@@ -58,7 +58,8 @@ public class NetworkPackProcessor implements IXLAnnotationProcessor {
             JCTreeUtils.Adder.addImplement2Class(classTree, Types.CUSTOM_PACKET_PAYLOAD);
             NetworkJCTreeUtils.addNetworkRegListener(classTree,modid,type,codec.owner.flatName()+"."+codec.flatName(),handler.name.toString(),handler.owner.flatName().toString());
             JCTreeUtils.Adder.addAnnotation2Method(JCTreeUtils.Finder.findSingleMethod(classTree,"register"),Types.SUBSCRIBE_EVENT, List.nil());
-            
+            LogHelper.INSTANCE.log("Processing " + fullClassName);
+            LogHelper.INSTANCE.debug("result: \n"+ classTree);
         }
     }
     

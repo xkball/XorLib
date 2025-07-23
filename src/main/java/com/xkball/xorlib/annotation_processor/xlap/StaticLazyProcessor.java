@@ -9,6 +9,7 @@ import com.xkball.xorlib.api.internal.IExtendedProcessingEnv;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.common.JCTreeVisitor;
 import com.xkball.xorlib.common.data.ModEnvData;
+import com.xkball.xorlib.util.LogHelper;
 import com.xkball.xorlib.util.jctree.ImportHelper;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
@@ -28,6 +29,7 @@ public class StaticLazyProcessor extends JCTreeVisitor implements IXLAnnotationP
     public void visitJCMethodInvocation(JCTree.JCMethodInvocation jcMethodInvocation) {
         super.visitJCMethodInvocation(jcMethodInvocation);
         if(importHelper.matchMethodInvoke(jcMethodInvocation,"com.xkball.xorlib.XL","staticLazy")){
+            var raw = jcMethodInvocation.toString();
             var lazyName = "XORLIB_GENERATED_LAZY_" + counter;
             counter += 1;
             var attrEnv = env.getEnter().getEnv(currentClassTree.sym);
@@ -35,6 +37,8 @@ public class StaticLazyProcessor extends JCTreeVisitor implements IXLAnnotationP
             createLazy(lazyName, jcMethodInvocation.args.getFirst(),type.toString());
             jcMethodInvocation.meth = treeMaker.Select(makeIdent(currentClassTree.sym.toString() + "." + lazyName),name("get"));
             jcMethodInvocation.args = List.nil();
+            LogHelper.INSTANCE.debug("Processing: \n" + raw);
+            LogHelper.INSTANCE.debug("result: \n" + jcMethodInvocation);
         }
     }
     
@@ -47,6 +51,7 @@ public class StaticLazyProcessor extends JCTreeVisitor implements IXLAnnotationP
     @Override
     public void process(ModEnvData modEnv, IExtendedProcessingEnv processingEnv) {
         this.env = processingEnv;
+        
         for(var classSymbol : modEnv.getAllClassSymbols()){
             this.currentClassTree = processingEnv.getJavacTrees().getTree(classSymbol);
             this.importHelper = new ImportHelper(processingEnv,classSymbol);

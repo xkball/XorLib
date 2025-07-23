@@ -9,6 +9,7 @@ import com.xkball.xorlib.api.internal.IJCParamAdapter;
 import com.xkball.xorlib.api.internal.IXLAnnotationProcessor;
 import com.xkball.xorlib.common.LocalVarParamAdapter;
 import com.xkball.xorlib.common.data.ModEnvData;
+import com.xkball.xorlib.util.LogHelper;
 import com.xkball.xorlib.util.StringUtils;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
@@ -54,7 +55,7 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         while (!classTrees.isEmpty()){
             var left = new ArrayList<JCTree.JCClassDecl>();
             for(var classTree : classTrees) {
-                //System.out.println(LOG_HEAD + "Processing " + classTree.name.toString());
+                LogHelper.INSTANCE.log("Processing: " + (classTree.sym == null ? classTree.getSimpleName() : classTree.sym.flatName()));
                 var constructors = new ArrayList<>(JCTreeUtils.Finder.findConstructors(classTree));
                 constructors.sort(Comparator.comparing(m -> m.params.size()));
                 var constr = constructors.stream().filter(c -> c.params.stream().allMatch(p -> paramAdapters.stream().anyMatch(adapter -> adapter.match(p)))).findFirst();
@@ -73,6 +74,7 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         }
         JCTreeUtils.Adder.addModBusSubscriber(firstClassTree,modEnv.modid());
         JCTreeUtils.Adder.addEventListener2Class(firstClassTree,gatherDataEventName(),treeMaker.Block(0,regMethodBody));
+        LogHelper.INSTANCE.debug("result: \n" + firstClassTree);
     }
     
     public List<JCTree.JCStatement> appendRegEventBody(List<JCTree.JCStatement> self, JCTree.JCClassDecl classTree, JCTree.JCMethodDecl constructor){

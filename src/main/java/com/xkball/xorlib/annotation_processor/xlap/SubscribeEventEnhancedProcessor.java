@@ -16,6 +16,7 @@ import com.xkball.xorlib.common.Expressions;
 import com.xkball.xorlib.common.MethodBuilder;
 import com.xkball.xorlib.common.data.ModEnvData;
 import com.xkball.xorlib.common.data.SubscribeEventEnhancedData;
+import com.xkball.xorlib.util.LogHelper;
 import com.xkball.xorlib.util.jctree.AnnotationUtils;
 import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
@@ -82,6 +83,7 @@ public class SubscribeEventEnhancedProcessor implements IXLAnnotationProcessor {
         
         for(var listener : listenersSymbol) {
             if(!(listener instanceof Symbol.MethodSymbol methodSymbol)) throw new RuntimeException("Symbol not a method");
+            LogHelper.INSTANCE.log("Processing: " + methodSymbol.owner.flatName() + "." +methodSymbol);
             var attr = AnnotationUtils.findAnnotation(methodSymbol, SubscribeEventEnhanced.class);
             if(attr == null) throw new RuntimeException("Cannot find @SubscribeEventEnhanced annotation.");
             var data = SubscribeEventEnhancedData.create(attr);
@@ -98,6 +100,6 @@ public class SubscribeEventEnhancedProcessor implements IXLAnnotationProcessor {
         JCTreeUtils.Adder.appendStatement2Method(JCTreeUtils.Finder.findSingleMethod(mainClassTree,"<init>"),
                 List.of(maker.Exec(maker.Apply(List.nil(),makeIdent(MAIN_CLASS_HOOK_NAME),List.nil()))));
         
-
+        LogHelper.INSTANCE.debug("Current Main Class: \n" + mainClassTree);
     }
 }
