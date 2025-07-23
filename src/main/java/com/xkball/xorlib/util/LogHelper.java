@@ -1,10 +1,11 @@
 package com.xkball.xorlib.util;
 
+import com.xkball.xorlib.XorLib;
+
 public class LogHelper {
     
     public static final LogHelper INSTANCE = new LogHelper();
     private static final StackWalker STACK_WALKER = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
-    private static final boolean debug = System.getenv("XORLIB.DEBUG") != null;
     
     private LogHelper() {}
     
@@ -24,7 +25,7 @@ public class LogHelper {
     
     public void debug(String msg) {
         var clazz = STACK_WALKER.getCallerClass();
-        if (debug) {
+        if (XorLib.DEBUG) {
             log(msg, clazz);
         }
     }

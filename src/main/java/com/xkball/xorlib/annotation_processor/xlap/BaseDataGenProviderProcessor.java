@@ -49,7 +49,7 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         classTrees = new ArrayList<>(classTrees);
         classTrees.addAll(ReplaceTranslatableProcessor.generatedClasses);
         var firstClassTree = classTrees.getFirst();
-        JCTreeUtils.setPos(firstClassTree);
+        posStack.pushPos(firstClassTree);
         List<JCTree.JCStatement> regMethodBody = List.nil();
         boolean changed = false;
         while (!classTrees.isEmpty()){
@@ -74,6 +74,7 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         }
         JCTreeUtils.Adder.addModBusSubscriber(firstClassTree,modEnv.modid());
         JCTreeUtils.Adder.addEventListener2Class(firstClassTree,gatherDataEventName(),treeMaker.Block(0,regMethodBody));
+        posStack.popPos();
         LogHelper.INSTANCE.debug("result: \n" + firstClassTree);
     }
     
@@ -83,7 +84,7 @@ public abstract class BaseDataGenProviderProcessor implements IXLAnnotationProce
         for(var param : constructor.params){
             var adapter = paramAdapters.stream().filter(p -> p.match(param)).findFirst().orElseThrow();
             initParams = initParams.append(adapter.makeParam());
-            increaseTreeMakerPos();
+            posStack.iinc();
         }
         var providerName = StringUtils.toSmallCamelCase(classTree.getSimpleName().toString());
         var providerInstance = maker.NewClass(null, emptyList(),makeIdent(getClassFullName(classTree)),initParams,null);

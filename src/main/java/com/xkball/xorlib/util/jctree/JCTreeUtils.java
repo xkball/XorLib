@@ -18,6 +18,7 @@ import javax.lang.model.util.Elements;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 public class JCTreeUtils {
@@ -26,6 +27,7 @@ public class JCTreeUtils {
     public static Elements elementUtils;
     public static TreeMaker treeMaker;
     public static Names names;
+    public static PosStack posStack;
     
     public static final Map<JCTree.JCClassDecl,String> createdClassNames = new HashMap<>();
     
@@ -91,13 +93,13 @@ public class JCTreeUtils {
         return treeMaker.Apply(List.nil(),fn,args);
     }
     
-    public static void setPos(JCTree target){
-        treeMaker.at(target.pos);
-    }
+//    private static void setPos(JCTree target){
+//        treeMaker.at(target.pos);
+//    }
     
-    public static void increaseTreeMakerPos(){
-        treeMaker.at(treeMaker.pos+1);
-    }
+//    public static void increaseTreeMakerPos(){
+//        treeMaker.at(treeMaker.pos+1);
+//    }
     
     public static boolean isPublicStatic(JCTree.JCVariableDecl del){
         return isPublicStatic(del.mods.flags);
@@ -249,6 +251,28 @@ public class JCTreeUtils {
         
         public static JCTree.JCModifiers param(){
             return treeMaker.Modifiers(Flags.PARAMETER);
+        }
+    }
+    
+    public static class PosStack{
+        private final LinkedList<Integer> stack =  new LinkedList<>();
+        
+        public void pushPos(JCTree tree){
+            stack.push(tree.pos);
+            treeMaker.pos = stack.getLast();
+        }
+        
+        public void iinc(){
+            if(stack.isEmpty()){
+                throw new IllegalStateException("Pos stack is empty.");
+            }
+            else stack.addLast(stack.removeLast()+1);
+            treeMaker.pos = stack.getLast();
+        }
+        
+        public void popPos(){
+            stack.pop();
+            treeMaker.pos = stack.getLast();
         }
     }
 }

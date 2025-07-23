@@ -18,6 +18,7 @@ import com.xkball.xorlib.util.jctree.NetworkJCTreeUtils;
 import java.util.Objects;
 
 import static com.xkball.xorlib.util.jctree.JCTreeUtils.isPublicStatic;
+import static com.xkball.xorlib.util.jctree.JCTreeUtils.posStack;
 
 
 @SupportMCVersion(loader = XorLib.NEO_FORGE, version = {"1.21.1","1.21.4"}, feature = ModMeta.Feature.NETWORK_PACKET)
@@ -51,13 +52,14 @@ public class NetworkPackProcessor implements IXLAnnotationProcessor {
             var type = Objects.requireNonNull(AnnotationUtils.getAnnotationValueAsEnum(netPackAnnotation, "type", NetworkPacket.Type.class));
             
             var classTree = jcTrees.getTree(classElement);
-            JCTreeUtils.setPos(classTree);
+            posStack.pushPos(classTree);
             JCTreeUtils.Adder.addModBusSubscriber(classTree,modid);
             NetworkJCTreeUtils.addNetworkPacketType(classTree,modid);
             NetworkJCTreeUtils.addNetworkPacketTypeGetter(classTree);
             JCTreeUtils.Adder.addImplement2Class(classTree, Types.CUSTOM_PACKET_PAYLOAD);
             NetworkJCTreeUtils.addNetworkRegListener(classTree,modid,type,codec.owner.flatName()+"."+codec.flatName(),handler.name.toString(),handler.owner.flatName().toString());
             JCTreeUtils.Adder.addAnnotation2Method(JCTreeUtils.Finder.findSingleMethod(classTree,"register"),Types.SUBSCRIBE_EVENT, List.nil());
+            posStack.popPos();
             LogHelper.INSTANCE.log("Processing " + fullClassName);
             LogHelper.INSTANCE.debug("result: \n"+ classTree);
         }

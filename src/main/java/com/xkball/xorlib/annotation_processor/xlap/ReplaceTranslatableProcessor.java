@@ -144,11 +144,16 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
         for(var classSymbol : modEnv.getAllClassSymbols()){
             var classTree = processingEnv.getJavacTrees().getTree(classSymbol);
             this.importHelper = new ImportHelper(processingEnv,classSymbol);
+            posStack.pushPos(classTree);
             visitJCTree(classTree);
+            posStack.popPos();
         }
         LogHelper.INSTANCE.log(i18nMap);
         for(int i = 0; i < modEnv.useLanguages().size(); i++){
-            Adder.addMethod2Class(generatedClasses.get(i),generateAddTranslationsMethod(i));
+            var classTree = generatedClasses.get(i);
+            posStack.pushPos(classTree);
+            Adder.addMethod2Class(classTree,generateAddTranslationsMethod(i));
+            posStack.popPos();
         }
     }
     
@@ -171,7 +176,7 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
         var maker = JCTreeUtils.treeMaker;
         var mainClassSymbol = modEnv.getMainClass();
         var mainClassTree = ModMetaProcessor.staticEnv.getJavacTrees().getTree(mainClassSymbol);
-        
+        posStack.pushPos(mainClassTree);
         for(var lang : modEnv.useLanguages()){
             var constructor = MethodBuilder.builder("<init>")
                     .flag(JCTreeUtils.Modifiers.public_())
@@ -189,5 +194,6 @@ public class ReplaceTranslatableProcessor extends JCTreeVisitor implements IXLAn
             Adder.addClass2Class(mainClassTree, clazz);
             generatedClasses.add(clazz);
         }
+        posStack.popPos();
     }
 }

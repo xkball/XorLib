@@ -7,13 +7,13 @@ import com.xkball.xorlib.util.jctree.JCTreeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
-import static com.xkball.xorlib.util.jctree.JCTreeUtils.makeIdent;
-import static com.xkball.xorlib.util.jctree.JCTreeUtils.treeMaker;
+import static com.xkball.xorlib.util.jctree.JCTreeUtils.*;
 
 public class MethodBuilder extends BlockBuilder<MethodBuilder> {
     
-    protected final List<JCTree.JCVariableDecl> params = new ArrayList<>();
+    protected final List<Supplier<JCTree.JCVariableDecl>> params = new ArrayList<>();
     protected final List<JCTree.JCTypeParameter> typeArgs = new ArrayList<>();
     protected String name;
     protected JCTree.JCExpression returnType;
@@ -49,40 +49,40 @@ public class MethodBuilder extends BlockBuilder<MethodBuilder> {
     }
     
     public MethodBuilder addParam(TypeTag typeTag, String varName){
-        this.params.add(maker.VarDef(JCTreeUtils.Modifiers.param(), JCTreeUtils.name(varName), maker.TypeIdent(typeTag), null));
+        this.params.add(() -> maker.VarDef(JCTreeUtils.Modifiers.param(), JCTreeUtils.name(varName), maker.TypeIdent(typeTag), null));
         return this;
     }
     
     public MethodBuilder addParam(Class<?> clazz, String varName){
-        this.params.add(new Parameter(clazz.getName(),"",varName).makeParam());
+        this.params.add(() -> new Parameter(clazz.getName(),"",varName).makeParam());
         return this;
     }
     
     public MethodBuilder addParam(Class<?> clazz, String typeArg, String varName){
-        this.params.add(new Parameter(clazz.getName(),typeArg,varName).makeParam());
+        this.params.add(() -> new Parameter(clazz.getName(),typeArg,varName).makeParam());
         return this;
     }
     
     public MethodBuilder addParam(Class<?> clazz, Class<?> typeArg, String varName){
-        this.params.add(new Parameter(clazz.getName(),typeArg.getName(),varName).makeParam());
+        this.params.add(() -> new Parameter(clazz.getName(),typeArg.getName(),varName).makeParam());
         return this;
     }
     
     public MethodBuilder addParam(String typeFullName, String varName) {
-        this.params.add(new Parameter(typeFullName,"", varName).makeParam());
+        this.params.add(() -> new Parameter(typeFullName,"", varName).makeParam());
         return this;
     }
     
     public MethodBuilder addParam(String typeFullName, String typeArg, String varName) {
-        this.params.add(new Parameter(typeFullName, typeArg, varName).makeParam());
+        this.params.add(() -> new Parameter(typeFullName, typeArg, varName).makeParam());
         return this;
     }
     
     public JCTree.JCMethodDecl build() {
         com.sun.tools.javac.util.List<JCTree.JCVariableDecl> pList = com.sun.tools.javac.util.List.nil();
         for (var param : params) {
-            pList = pList.append(param);
-            JCTreeUtils.increaseTreeMakerPos();
+            pList = pList.append(param.get());
+            posStack.iinc();
         }
         return maker.MethodDef(flag, JCTreeUtils.name(name),returnType, com.sun.tools.javac.util.List.from(typeArgs), pList, com.sun.tools.javac.util.List.nil(),getAsBlock(),null);
     }

@@ -56,7 +56,9 @@ public class StaticLazyProcessor extends JCTreeVisitor implements IXLAnnotationP
             this.currentClassTree = processingEnv.getJavacTrees().getTree(classSymbol);
             this.importHelper = new ImportHelper(processingEnv,classSymbol);
             this.counter = 0;
+            posStack.pushPos(currentClassTree);
             this.visitJCTree(currentClassTree);
+            posStack.popPos();
         }
     }
     

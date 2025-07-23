@@ -38,7 +38,7 @@ public class SubscribeEventEnhancedProcessor implements IXLAnnotationProcessor {
         var maker = treeMaker;
         
         var mainClassTree = jcTrees.getTree(mainClassSymbol);
-        JCTreeUtils.setPos(mainClassTree);
+        posStack.pushPos(mainClassTree);
         
         var regMethod = MethodBuilder.builder(RUN_SUBSCRIBER_NAME)
                 .flag(Modifiers.publicStatic())
@@ -99,7 +99,7 @@ public class SubscribeEventEnhancedProcessor implements IXLAnnotationProcessor {
         JCTreeUtils.Adder.addMethod2Class(mainClassTree,hookMethodBuilder.build());
         JCTreeUtils.Adder.appendStatement2Method(JCTreeUtils.Finder.findSingleMethod(mainClassTree,"<init>"),
                 List.of(maker.Exec(maker.Apply(List.nil(),makeIdent(MAIN_CLASS_HOOK_NAME),List.nil()))));
-        
+        posStack.popPos();
         LogHelper.INSTANCE.debug("Current Main Class: \n" + mainClassTree);
     }
 }
